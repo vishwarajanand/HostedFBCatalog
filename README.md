@@ -2,4 +2,4 @@
 Hosting a Facebook Dynamic Ads catalog for testing
 
 # Hosted Url
-https://vishwarajanand.github.io/HostedFBCatalog/
+https://vishwarajanand.github.io/HostedSampleFBCatalogs/
