@@ -6,11 +6,17 @@
 <html>
 
 <body>
-    <div id="dpa_content" hidden>
+    <div id="da_product_content" hidden>
         <h1 id="product_title"></h1>
         <p id="product_id"></p>
         <p id="product_price"></p>
-        <p id="utm_source"></p>
+        <img id="product_img" src="" alt="Product Image" height="400" width="400">
+    </div>
+    <div id="da_flight_content" hidden>
+        <h1 id="flight_title"></h1>
+        <p id="flight_origin"></p>
+        <p id="flight_destination"></p>
+        <p id="flight_price"></p>
         <img id="product_img" src="" alt="Product Image" height="400" width="400">
     </div>
     <div id="readme_content" hidden>
@@ -22,7 +28,7 @@
                 href="https://vishwarajanand.github.io/HostedSampleFBCatalogs/dpa_product_catalog_sample_feed.csv">https://vishwarajanand.github.io/HostedSampleFBCatalogs/dpa_product_catalog_sample_feed.csv</a>.
         </p>
         <p>Set landing website url as this in the ads manager:
-            <pre>https://vishwarajanand.github.io/HostedSampleFBCatalogs/product={{id}}</pre>
+            <pre>https://vishwarajanand.github.io/HostedSampleFBCatalogs?product={{id}}</pre>
         </p>
 
         <p>This repository contains a flight catalog hosted here: <a
@@ -31,18 +37,37 @@
     </div>
 
     <script>
-        var got_product_details = false; // mark true when all details correctly fetched
+        var WEBSITE_MODE = "README"; // show default when all details correctly fetched
         function resetView() {
-            if (got_product_details) {
-                // show dpa landing website
-                document.getElementById("dpa_content").hidden = false;
-                document.getElementById("readme_content").hidden = true;
-            } else {
-                // dont show any dpa website
-                document.getElementById("dpa_content").hidden = true;
-                document.getElementById("readme_content").hidden = false;
+            switch (WEBSITE_MODE) {
+                case "README":
+                    // show Readme website
+                    document.getElementById("da_product_content").hidden = true;
+                    document.getElementById("da_flight_content").hidden = true;
+                    document.getElementById("readme_content").hidden = false;
+                    break;
+                case "PRODUCT":
+                    // show dpa landing website
+                    document.getElementById("da_product_content").hidden = false;
+                    document.getElementById("da_flight_content").hidden = true;
+                    document.getElementById("readme_content").hidden = true;
+                    break;
+                case "FLIGHT":
+                    // show dpa landing website
+                    document.getElementById("da_product_content").hidden = true;
+                    document.getElementById("da_flight_content").hidden = false;
+                    document.getElementById("readme_content").hidden = true;
+                    break;
+                default:
+                    WEBSITE_MODE = "README";
+                    resetView(); // breaks when function hits next recursion
             }
         }
+
+        //reset view
+        resetView();
+
+        // check for DPA
         var currentURL = new URL(window.location.href);
         var item_id = currentURL.searchParams.get("product");
         if (item_id !== null) {
@@ -67,28 +92,18 @@
                             document.getElementById("product_img").src = fields[entries.indexOf("image[0].url")];
 
                             // mark product details fetched successfully
-                            got_product_details = true;
+                            WEBSITE_MODE = "PRODUCT";
                             resetView();
                         }
                     }
                 },
                 error: function (error) {
                     // error while fetching URL
-                    got_product_details = false;
+                    WEBSITE_MODE = "README";
                     resetView();
                     console.log("Could not read get '" + item_id + "' from '" + catalogURL + "', please check the URL or contact admin.");
                 }
             });
-
-            // check if utm_source is present, add it 
-            var utm_source = currentURL.searchParams.get("utm_source");
-            if (utm_source !== null) {
-                document.getElementById("utm_source").innerHTML = utm_source;
-            }
-
-            //reset view
-            resetView();
-        }
     </script>
 
 </body>
