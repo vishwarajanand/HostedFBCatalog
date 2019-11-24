@@ -115,7 +115,7 @@
         var origin = currentURL.searchParams.get("origin");
         var dest = currentURL.searchParams.get("dest");
         if (origin !== null && dest !== null) {
-            var catalogURL = window.location.origin + window.location.pathname + "dpa_flight_catalog_sample_feed.csv";
+            var catalogURL = window.location.origin + window.location.pathname + "dat_flights_catalog_sample_feed.csv";
             $.ajax({
                 type: "GET",
                 url: catalogURL,
