@@ -18,8 +18,15 @@
 
         <p>Facebook Dynamic Ads need catalog file which can be passed as a feed so that backend learns of all the
             products available on the website inventory.</p>
-        <p>This repository contains a page hosted here: <a
-                href="https://vishwarajanand.github.io/HostedSampleFBCatalogs/">https://vishwarajanand.github.io/HostedSampleFBCatalogs/</a>.
+        <p>This repository contains a product catalog hosted here: <a
+                href="https://vishwarajanand.github.io/HostedSampleFBCatalogs/dpa_product_catalog_sample_feed.csv">https://vishwarajanand.github.io/HostedSampleFBCatalogs/dpa_product_catalog_sample_feed.csv</a>.
+        </p>
+        <p>Set landing website url as this in the ads manager:
+            <pre>https://vishwarajanand.github.io/HostedSampleFBCatalogs/product={{id}}</pre>
+        </p>
+
+        <p>This repository contains a flight catalog hosted here: <a
+                href="https://vishwarajanand.github.io/HostedSampleFBCatalogs/dat_flights_catalog_sample_feed.csv">https://vishwarajanand.github.io/HostedSampleFBCatalogs/dat_flights_catalog_sample_feed.csv</a>.
         </p>
     </div>
 
@@ -37,7 +44,7 @@
             }
         }
         var currentURL = new URL(window.location.href);
-        var item_id = currentURL.searchParams.get("item_id");
+        var item_id = currentURL.searchParams.get("product");
         if (item_id !== null) {
             var catalogURL = window.location.origin + window.location.pathname + "dpa_product_catalog_sample_feed.csv";
             $.ajax({
