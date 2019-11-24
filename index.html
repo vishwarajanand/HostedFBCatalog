@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
 <html>
 
 <body>
@@ -24,12 +27,45 @@
         var got_product_details = false; // mark true when all details correctly fetched
         var currentURL = new URL(window.location.href);
         var item_id = currentURL.searchParams.get("item_id");
-        if(item_id !== null){
-            
+        if (item_id !== null) {
+            var catalogURL = window.location.origin + window.location.pathname + "dpa_product_catalog_sample_feed.csv";
+            $.ajax({
+                type: "GET",
+                url: catalogURL,
+                dataType: "text",
+                success: function (response) {
+                    var allText = response;
+                    // catalog fetched
+                    var allTextLines = allText.split(/\r\n|\n/);
+                    var entries = allTextLines[0].split(',');
+                    // index of id is 0
+                    for (var allTextLine of allTextLines) {
+                        var fields = allTextLine.split(',');
+                        if (fields[0] === item_id) {
+                            // found a match in item id
+                            document.getElementById("product_id").innerHTML = fields[entries.indexOf("id")];
+                            document.getElementById("product_title").innerHTML = fields[entries.indexOf("title")];
+                            document.getElementById("product_price").innerHTML = fields[entries.indexOf("price")];
+                            document.getElementById("product_img").src = fields[entries.indexOf("image[0].url")];
 
+                            // mark product details fetched successfully
+                            got_product_details = true;
+                        }
+                    }
+                },
+                error: function (error) {
+                    // error while fetching URL
+                    got_product_details = true;
+                    console.log("Could not read get '" + item_id + "' from '" + catalogURL + "', please check the URL or contact admin.");
+                }
+            });
 
-            // mark product details fetched successfully
-            got_product_details = true;
+            // check if utm_source is present, add it 
+            var utm_source = currentURL.searchParams.get("utm_source");
+            if (utm_source !== null) {
+                document.getElementById("utm_source").innerHTML = utm_source;
+                utm_source
+            }
         }
 
         if (got_product_details) {
