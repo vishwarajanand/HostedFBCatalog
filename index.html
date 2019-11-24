@@ -17,7 +17,7 @@
         <p id="flight_origin"></p>
         <p id="flight_destination"></p>
         <p id="flight_price"></p>
-        <img id="product_img" src="" alt="Product Image" height="400" width="400">
+        <img id="flight_img" src="" alt="Flight Image" height="400" width="400">
     </div>
     <div id="readme_content" hidden>
         <h1>Contains some CSV files to be used for Facebook Dynamic Ads testing.</h1>
@@ -28,12 +28,16 @@
                 href="https://vishwarajanand.github.io/HostedSampleFBCatalogs/dpa_product_catalog_sample_feed.csv">https://vishwarajanand.github.io/HostedSampleFBCatalogs/dpa_product_catalog_sample_feed.csv</a>.
         </p>
         <p>Set landing website url as this in the ads manager:
-            <pre>https://vishwarajanand.github.io/HostedSampleFBCatalogs?product={{id}}</pre>
+            <pre>https://vishwarajanand.github.io/HostedSampleFBCatalogs?product=DB_1</pre> or use <pre>{{product.id}}</pre> in place of DB_1.
         </p>
 
         <p>This repository contains a flight catalog hosted here: <a
                 href="https://vishwarajanand.github.io/HostedSampleFBCatalogs/dat_flights_catalog_sample_feed.csv">https://vishwarajanand.github.io/HostedSampleFBCatalogs/dat_flights_catalog_sample_feed.csv</a>.
         </p>
+        <p>Set landing website url as this in the ads manager:
+            <pre>https://vishwarajanand.github.io/HostedSampleFBCatalogs?origin=HKG&dest=SDK</pre> or use <pre>{{flight.origin_airport}}</pre> in place of HKG and <pre>{{flight.destination_airport}}</pre> in place of SDK.
+        </p>
+
     </div>
 
     <script>
@@ -104,6 +108,49 @@
                     console.log("Could not read get '" + item_id + "' from '" + catalogURL + "', please check the URL or contact admin.");
                 }
             });
+        }
+
+        // check for DAT flights
+        var currentURL = new URL(window.location.href);
+        var origin = currentURL.searchParams.get("origin");
+        var dest = currentURL.searchParams.get("dest");
+        if (origin !== null && dest !== null) {
+            var catalogURL = window.location.origin + window.location.pathname + "dpa_flight_catalog_sample_feed.csv";
+            $.ajax({
+                type: "GET",
+                url: catalogURL,
+                dataType: "text",
+                success: function (response) {
+                    var allText = response;
+                    // catalog fetched
+                    var allTextLines = allText.split(/\r\n|\n/);
+                    var entries = allTextLines[0].split(',');
+                    // index of id is 0
+                    for (var allTextLine of allTextLines) {
+                        var fields = allTextLine.split(',');
+                        if (fields[0] === origin && fields[1] === dest) {
+                            // found a match in item id
+                            document.getElementById("flight_title").innerHTML = "Flight " + fields[entries.indexOf("title")];
+                            document.getElementById("flight_origin").innerHTML = "Origin: " + fields[entries.indexOf("origin_airport")];
+                            document.getElementById("flight_destination").innerHTML = "Product Price: " + fields[entries.indexOf("destination_airport")];
+                            document.getElementById("flight_price").innerHTML = "Product Price: " + fields[entries.indexOf("price")];
+                            document.getElementById("flight_img").src = fields[entries.indexOf("image[0].url")];
+
+                            // mark product details fetched successfully
+                            WEBSITE_MODE = "FLIGHT";
+                            resetView();
+                        }
+                    }
+                },
+                error: function (error) {
+                    // error while fetching URL
+                    WEBSITE_MODE = "README";
+                    resetView();
+                    console.log("Could not read get '" + origin + "' to '" + dest + "' flight from '" + catalogURL + "', please check the URL or contact admin.");
+                }
+            });
+        }
+
     </script>
 
 </body>
