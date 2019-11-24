@@ -1,16 +1,48 @@
 <!DOCTYPE html>
+
 <html>
 
 <body>
-    <div id="content">
-        <img src="https://user-images.githubusercontent.com/7369612/65377772-4e819680-dcce-11e9-97fa-66849603da78.png" alt="Product Image" height="600" width="600">
+    <div id="dpa_content" hidden>
+        <h1 id="product_title"></h1>
+        <p id="product_id"></p>
+        <p id="product_price"></p>
+        <p id="utm_source"></p>
+        <img id="product_img" src="" alt="Product Image" height="400" width="400">
     </div>
-    <div id="no_content">
+    <div id="readme_content" hidden>
         <h1>Contains some CSV files to be used for Facebook Dynamic Ads testing.</h1>
 
-        <p>Facebook Dynamic Ads need catalog file which can be passed as a feed so that backend learns of all the products available on the website inventory.</p>
-        <p>This repository contains a page hosted here: <a href="https://vishwarajanand.github.io/HostedSampleFBCatalogs/">https://vishwarajanand.github.io/HostedSampleFBCatalogs/</a>.</p>
+        <p>Facebook Dynamic Ads need catalog file which can be passed as a feed so that backend learns of all the
+            products available on the website inventory.</p>
+        <p>This repository contains a page hosted here: <a
+                href="https://vishwarajanand.github.io/HostedSampleFBCatalogs/">https://vishwarajanand.github.io/HostedSampleFBCatalogs/</a>.
+        </p>
     </div>
+
+    <script>
+        var got_product_details = false; // mark true when all details correctly fetched
+        var currentURL = new URL(window.location.href);
+        var item_id = currentURL.searchParams.get("item_id");
+        if(item_id !== null){
+            
+
+
+            // mark product details fetched successfully
+            got_product_details = true;
+        }
+
+        if (got_product_details) {
+            // show dpa landing website
+            document.getElementById("dpa_content").hidden = false;
+            document.getElementById("readme_content").hidden = true;
+        } else {
+            // dont show any dpa website
+            document.getElementById("dpa_content").hidden = true;
+            document.getElementById("readme_content").hidden = false;
+        }
+    </script>
+
 </body>
 
 </html>
