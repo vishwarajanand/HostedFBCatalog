@@ -133,7 +133,7 @@
                         var fields = allTextLine.split(',');
                         if (fields[0] === origin && fields[1] === dest) {
                             // found a match in item id
-                            document.getElementById("flight_title").innerHTML = "Flight " + fields[entries.indexOf("title")];
+                            document.getElementById("flight_title").innerHTML = "Flight " + fields[entries.indexOf("description")];
                             document.getElementById("flight_origin").innerHTML = "Origin: " + fields[entries.indexOf("origin_airport")];
                             document.getElementById("flight_destination").innerHTML = "Product Price: " + fields[entries.indexOf("destination_airport")];
                             document.getElementById("flight_price").innerHTML = "Product Price: " + fields[entries.indexOf("price")];
